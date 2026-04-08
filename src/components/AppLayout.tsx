@@ -8,6 +8,7 @@ import {
 import { SCHOOL_NAME } from "@/data/mockData";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import schoolLogo from "@/assets/logo.png";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/" },
@@ -38,7 +39,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         <div className="flex items-center gap-3 px-4 h-16 border-b border-sidebar-border shrink-0">
-          <div className="w-9 h-9 rounded-lg bg-sidebar-primary flex items-center justify-center text-sidebar-primary-foreground font-bold text-sm shrink-0">GH</div>
+          <img src={schoolLogo} alt="Glory Haven Montessori" className="w-9 h-9 rounded-lg shrink-0 object-contain" />
           {!collapsed && (
             <div className="overflow-hidden">
               <h1 className="text-sm font-bold text-sidebar-accent-foreground truncate">{SCHOOL_NAME}</h1>
