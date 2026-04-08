@@ -50,7 +50,7 @@ export default function Payments() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead><TableHead>Student</TableHead><TableHead className="text-right">Amount (₵)</TableHead>
+              <TableHead>ID</TableHead><TableHead>Student</TableHead><TableHead className="text-right">Amount (GHS)</TableHead>
               <TableHead>Date</TableHead><TableHead>Method</TableHead><TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
