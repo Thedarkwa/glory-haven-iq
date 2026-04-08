@@ -1,8 +1,9 @@
-import { payroll } from "@/data/mockData";
+import { useData } from "@/contexts/DataContext";
 import PageHeader from "@/components/PageHeader";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function Payroll() {
+  const { payroll } = useData();
   const totalNet = payroll.reduce((s, p) => s + p.netSalary, 0);
 
   return (
