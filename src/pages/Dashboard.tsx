@@ -20,7 +20,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Welcome back 👋</h1>
+        <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
         <p className="text-muted-foreground text-sm mt-1">Here's what's happening at Glory Haven Montessori</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
