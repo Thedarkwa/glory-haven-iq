@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, GraduationCap, School, BookOpen,
   Banknote, CreditCard, Receipt, Calculator, FileText,
-  ChevronLeft, ChevronRight, Menu, LogOut,
+  ChevronLeft, ChevronRight, Menu, LogOut, ShieldCheck,
 } from "lucide-react";
 import { SCHOOL_NAME } from "@/data/mockData";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,6 +21,7 @@ const navItems = [
   { label: "Expenses", icon: Receipt, path: "/expenses" },
   { label: "Payroll", icon: Calculator, path: "/payroll" },
   { label: "Reports", icon: FileText, path: "/reports" },
+  { label: "Admin", icon: ShieldCheck, path: "/admin" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

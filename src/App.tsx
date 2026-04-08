@@ -18,6 +18,7 @@ import Payments from "@/pages/Payments";
 import Expenses from "@/pages/Expenses";
 import Payroll from "@/pages/Payroll";
 import Reports from "@/pages/Reports";
+import Admin from "@/pages/Admin";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ function ProtectedRoutes() {
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/payroll" element={<Payroll />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AppLayout>
