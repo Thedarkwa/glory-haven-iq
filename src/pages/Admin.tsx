@@ -241,7 +241,7 @@ export default function Admin() {
 
       <DeleteDialog
         open={!!deleteTarget}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        onClose={() => setDeleteTarget(null)}
         onConfirm={handleDeleteUser}
         title="Delete User Profile"
         description={`Are you sure you want to remove ${deleteTarget?.display_name || "this user"}'s profile? This action cannot be undone.`}
