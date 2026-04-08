@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Users, Shield, Trash2 } from "lucide-react";
-import { DeleteDialog } from "@/components/DeleteDialog";
+import DeleteDialog from "@/components/DeleteDialog";
 import PageHeader from "@/components/PageHeader";
 
 interface UserProfile {
