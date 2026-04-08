@@ -8,6 +8,7 @@ import {
 import { SCHOOL_NAME } from "@/data/mockData";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import schoolLogo from "@/assets/logo.png";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/" },
