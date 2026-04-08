@@ -47,7 +47,7 @@ export default function StaffPage() {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead><TableHead>Name</TableHead><TableHead>Role</TableHead>
-              <TableHead className="text-right">Salary (₵)</TableHead><TableHead className="text-right">SSNIT %</TableHead>
+              <TableHead className="text-right">Salary (GHS)</TableHead><TableHead className="text-right">SSNIT %</TableHead>
               <TableHead className="text-right">PAYE %</TableHead><TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
