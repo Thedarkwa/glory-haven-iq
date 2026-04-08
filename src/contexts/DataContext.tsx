@@ -104,6 +104,9 @@ interface DataContextType {
   addSubject: (s: { name: string; class: string }) => Promise<void>;
   updateSubject: (id: string, s: Partial<Subject>) => Promise<void>;
   deleteSubject: (id: string) => Promise<void>;
+  addFee: (f: { student_id: string; student_name: string; class: string; term: string; total_fees: number; amount_paid: number }) => Promise<void>;
+  updateFee: (id: string, f: Partial<Fee>) => Promise<void>;
+  deleteFee: (id: string) => Promise<void>;
   addPayment: (p: { student_id: string; student_name: string; amount: number; date: string; method: string }) => Promise<void>;
   updatePayment: (id: string, p: Partial<Payment>) => Promise<void>;
   deletePayment: (id: string) => Promise<void>;
