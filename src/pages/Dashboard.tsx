@@ -26,8 +26,8 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total Students" value={students.length} icon={GraduationCap} trend="+2 this term" trendUp />
         <StatCard title="Total Staff" value={staff.length} icon={Users} />
-        <StatCard title="Income (GH₵)" value={`₵${totalIncome.toLocaleString()}`} icon={Banknote} trend="+12% vs last term" trendUp />
-        <StatCard title="Outstanding Fees" value={`₵${totalOutstanding.toLocaleString()}`} icon={TrendingUp} trend={`${fees.filter(f => f.amount_paid < f.total_fees).length} students owing`} />
+        <StatCard title="Income (GHS)" value={`GHS ${totalIncome.toLocaleString()}`} icon={Banknote} trend="+12% vs last term" trendUp />
+        <StatCard title="Outstanding Fees" value={`GHS ${totalOutstanding.toLocaleString()}`} icon={TrendingUp} trend={`${fees.filter(f => f.amount_paid < f.total_fees).length} students owing`} />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="stat-card">
