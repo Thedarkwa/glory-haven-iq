@@ -55,9 +55,9 @@ export default function Dashboard() {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Total Income</p><p className="text-xl font-bold text-success mt-1">₵{totalIncome.toLocaleString()}</p></div>
-        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Total Expenses</p><p className="text-xl font-bold text-destructive mt-1">₵{totalExpenses.toLocaleString()}</p></div>
-        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Net Balance</p><p className="text-xl font-bold text-foreground mt-1">₵{(totalIncome - totalExpenses).toLocaleString()}</p></div>
+        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Total Income</p><p className="text-xl font-bold text-success mt-1">GHS {totalIncome.toLocaleString()}</p></div>
+        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Total Expenses</p><p className="text-xl font-bold text-destructive mt-1">GHS {totalExpenses.toLocaleString()}</p></div>
+        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Net Balance</p><p className="text-xl font-bold text-foreground mt-1">GHS {(totalIncome - totalExpenses).toLocaleString()}</p></div>
       </div>
     </div>
   );
