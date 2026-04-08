@@ -168,4 +168,12 @@ export const payroll: PayrollEntry[] = staff.map(s => {
 
 export const expenseCategories = ["Utilities", "Supplies", "Maintenance", "Transport", "Events", "Salaries", "Other"];
 export const paymentMethods = ["Cash", "Mobile Money", "Bank Transfer"] as const;
-export const classNames = ["KG 1", "KG 2", "Class 1", "Class 2", "Class 3"];
+export const classNames = ["Creche", "Nursery 1", "Nursery 2", "KG 1", "KG 2", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6"];
+
+export const classCategories = [
+  { label: "All Students", classes: [] as string[] },
+  { label: "Pre-School", classes: ["Creche", "Nursery 1", "Nursery 2"] },
+  { label: "Kindergarten", classes: ["KG 1", "KG 2"] },
+  { label: "Lower Primary", classes: ["Class 1", "Class 2", "Class 3"] },
+  { label: "Upper Primary", classes: ["Class 4", "Class 5", "Class 6"] },
+];
