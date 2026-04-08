@@ -21,6 +21,7 @@ const navItems = [
   { label: "Expenses", icon: Receipt, path: "/expenses" },
   { label: "Payroll", icon: Calculator, path: "/payroll" },
   { label: "Reports", icon: FileText, path: "/reports" },
+  { label: "Admin", icon: ShieldCheck, path: "/admin" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
