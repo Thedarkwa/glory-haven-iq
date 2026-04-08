@@ -37,7 +37,7 @@ export default function Reports() {
     const summaryData = [
       ["Glory Haven Montessori - Financial Report"],
       [],
-      ["Metric", "Amount (₵)"],
+      ["Metric", "Amount (GHS)"],
       ["Total Income", totalIncome],
       ["Total Expenses", totalExp],
       ["Total Payroll", totalPayroll],
