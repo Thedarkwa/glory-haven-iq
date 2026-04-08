@@ -134,7 +134,7 @@ export default function Admin() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Admin Panel" subtitle="Manage registered users and their roles" />
+      <PageHeader title="Admin Panel" description="Manage registered users and their roles" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
