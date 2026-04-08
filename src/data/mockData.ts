@@ -79,9 +79,14 @@ export const students: Student[] = [
   { id: "STU005", fullName: "Kofi Owusu", dateOfBirth: "2016-06-30", gender: "Male", class: "KG 2", guardian: "Mr. Owusu Afriyie", contact: "0261234567" },
   { id: "STU006", fullName: "Abena Sarpong", dateOfBirth: "2013-09-12", gender: "Female", class: "Class 3", guardian: "Mrs. Sarpong", contact: "0501234567" },
   { id: "STU007", fullName: "Nana Agyei", dateOfBirth: "2014-04-08", gender: "Male", class: "Class 2", guardian: "Mr. Agyei Badu", contact: "0541234567" },
-  { id: "STU008", fullName: "Akosua Frimpong", dateOfBirth: "2016-12-25", gender: "Female", class: "KG 1", guardian: "Mrs. Frimpong", contact: "0231234567" },
+  { id: "STU008", fullName: "Akosua Frimpong", dateOfBirth: "2016-12-25", gender: "Female", class: "Creche", guardian: "Mrs. Frimpong", contact: "0231234567" },
   { id: "STU009", fullName: "Kweku Amponsah", dateOfBirth: "2013-02-14", gender: "Male", class: "Class 3", guardian: "Mr. Amponsah", contact: "0571234567" },
-  { id: "STU010", fullName: "Adwoa Poku", dateOfBirth: "2017-05-20", gender: "Female", class: "KG 1", guardian: "Mrs. Poku", contact: "0211234567" },
+  { id: "STU010", fullName: "Adwoa Poku", dateOfBirth: "2017-05-20", gender: "Female", class: "Nursery 1", guardian: "Mrs. Poku", contact: "0211234567" },
+  { id: "STU011", fullName: "Kwabena Ofori", dateOfBirth: "2017-08-10", gender: "Male", class: "Nursery 2", guardian: "Mr. Ofori", contact: "0241234590" },
+  { id: "STU012", fullName: "Esi Amoah", dateOfBirth: "2016-04-05", gender: "Female", class: "KG 1", guardian: "Mrs. Amoah", contact: "0551234590" },
+  { id: "STU013", fullName: "Yaw Mensah", dateOfBirth: "2012-01-20", gender: "Male", class: "Class 4", guardian: "Mr. Mensah", contact: "0271234590" },
+  { id: "STU014", fullName: "Afia Owusu", dateOfBirth: "2011-06-15", gender: "Female", class: "Class 5", guardian: "Mrs. Owusu", contact: "0201234590" },
+  { id: "STU015", fullName: "Kofi Antwi", dateOfBirth: "2010-09-08", gender: "Male", class: "Class 6", guardian: "Mr. Antwi", contact: "0261234590" },
 ];
 
 export const staff: Staff[] = [
@@ -94,11 +99,17 @@ export const staff: Staff[] = [
 ];
 
 export const classes: ClassRoom[] = [
-  { id: "CLS001", name: "KG 1", teacherAssigned: "Ms. Patience Osei", studentCount: 2 },
-  { id: "CLS002", name: "KG 2", teacherAssigned: "Mr. Daniel Mensah", studentCount: 2 },
-  { id: "CLS003", name: "Class 1", teacherAssigned: "Mr. Emmanuel Tetteh", studentCount: 2 },
-  { id: "CLS004", name: "Class 2", teacherAssigned: "Ms. Patience Osei", studentCount: 2 },
-  { id: "CLS005", name: "Class 3", teacherAssigned: "Mr. Daniel Mensah", studentCount: 2 },
+  { id: "CLS001", name: "Creche", teacherAssigned: "Ms. Patience Osei", studentCount: 1 },
+  { id: "CLS002", name: "Nursery 1", teacherAssigned: "Mr. Daniel Mensah", studentCount: 1 },
+  { id: "CLS003", name: "Nursery 2", teacherAssigned: "Ms. Patience Osei", studentCount: 1 },
+  { id: "CLS004", name: "KG 1", teacherAssigned: "Mr. Emmanuel Tetteh", studentCount: 1 },
+  { id: "CLS005", name: "KG 2", teacherAssigned: "Mr. Daniel Mensah", studentCount: 2 },
+  { id: "CLS006", name: "Class 1", teacherAssigned: "Mr. Emmanuel Tetteh", studentCount: 2 },
+  { id: "CLS007", name: "Class 2", teacherAssigned: "Ms. Patience Osei", studentCount: 2 },
+  { id: "CLS008", name: "Class 3", teacherAssigned: "Mr. Daniel Mensah", studentCount: 2 },
+  { id: "CLS009", name: "Class 4", teacherAssigned: "Mr. Emmanuel Tetteh", studentCount: 1 },
+  { id: "CLS010", name: "Class 5", teacherAssigned: "Ms. Patience Osei", studentCount: 1 },
+  { id: "CLS011", name: "Class 6", teacherAssigned: "Mr. Daniel Mensah", studentCount: 1 },
 ];
 
 export const subjects: Subject[] = [
@@ -157,4 +168,12 @@ export const payroll: PayrollEntry[] = staff.map(s => {
 
 export const expenseCategories = ["Utilities", "Supplies", "Maintenance", "Transport", "Events", "Salaries", "Other"];
 export const paymentMethods = ["Cash", "Mobile Money", "Bank Transfer"] as const;
-export const classNames = ["KG 1", "KG 2", "Class 1", "Class 2", "Class 3"];
+export const classNames = ["Creche", "Nursery 1", "Nursery 2", "KG 1", "KG 2", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6"];
+
+export const classCategories = [
+  { label: "All Students", classes: [] as string[] },
+  { label: "Pre-School", classes: ["Creche", "Nursery 1", "Nursery 2"] },
+  { label: "Kindergarten", classes: ["KG 1", "KG 2"] },
+  { label: "Lower Primary", classes: ["Class 1", "Class 2", "Class 3"] },
+  { label: "Upper Primary", classes: ["Class 4", "Class 5", "Class 6"] },
+];

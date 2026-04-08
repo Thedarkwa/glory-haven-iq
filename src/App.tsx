@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { DataProvider } from "@/contexts/DataContext";
 import AppLayout from "@/components/AppLayout";
 import Dashboard from "@/pages/Dashboard";
 import Students from "@/pages/Students";
@@ -23,23 +24,25 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <AppLayout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/students" element={<Students />} />
-            <Route path="/staff" element={<StaffPage />} />
-            <Route path="/classes" element={<Classes />} />
-            <Route path="/subjects" element={<Subjects />} />
-            <Route path="/fees" element={<Fees />} />
-            <Route path="/payments" element={<Payments />} />
-            <Route path="/expenses" element={<Expenses />} />
-            <Route path="/payroll" element={<Payroll />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AppLayout>
-      </BrowserRouter>
+      <DataProvider>
+        <BrowserRouter>
+          <AppLayout>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/students" element={<Students />} />
+              <Route path="/staff" element={<StaffPage />} />
+              <Route path="/classes" element={<Classes />} />
+              <Route path="/subjects" element={<Subjects />} />
+              <Route path="/fees" element={<Fees />} />
+              <Route path="/payments" element={<Payments />} />
+              <Route path="/expenses" element={<Expenses />} />
+              <Route path="/payroll" element={<Payroll />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AppLayout>
+        </BrowserRouter>
+      </DataProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
