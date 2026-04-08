@@ -95,7 +95,7 @@ export default function Reports() {
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 90%)" />
             <XAxis dataKey="month" />
             <YAxis />
-            <Tooltip formatter={(v: number) => `₵${v.toLocaleString()}`} />
+            <Tooltip formatter={(v: number) => `GHS ${v.toLocaleString()}`} />
             <Legend />
             <Bar dataKey="income" fill="hsl(142, 71%, 45%)" radius={[4, 4, 0, 0]} name="Income" />
             <Bar dataKey="expenses" fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} name="Expenses" />
