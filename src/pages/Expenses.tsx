@@ -42,7 +42,7 @@ export default function Expenses() {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead><TableHead>Date</TableHead><TableHead>Category</TableHead>
-              <TableHead className="text-right">Amount (₵)</TableHead><TableHead>Notes</TableHead>
+              <TableHead className="text-right">Amount (GHS)</TableHead><TableHead>Notes</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
