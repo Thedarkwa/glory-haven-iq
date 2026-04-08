@@ -16,7 +16,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import type { Student } from "@/data/mockData";
 import { toast } from "sonner";
 
-const emptyStudent = { fullName: "", dateOfBirth: "", gender: "Male" as const, class: "Creche", guardian: "", contact: "" };
+const emptyStudent = { fullName: "", dateOfBirth: "", gender: "Male" as "Male" | "Female", class: "Creche", guardian: "", contact: "" };
 
 export default function Students() {
   const { students, addStudent, updateStudent, deleteStudent } = useData();
