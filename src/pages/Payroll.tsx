@@ -33,7 +33,7 @@ export default function Payroll() {
             ))}
             <TableRow className="bg-muted/50">
               <TableCell colSpan={6} className="font-bold text-right">Total Net Payroll</TableCell>
-              <TableCell className="text-right font-bold">₵{totalNet.toFixed(2)}</TableCell>
+              <TableCell className="text-right font-bold">GHS {totalNet.toFixed(2)}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

@@ -76,7 +76,7 @@ export default function StaffPage() {
             <div className="grid gap-2"><Label>Name</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></div>
             <div className="grid gap-2"><Label>Role</Label><Input value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} /></div>
             <div className="grid grid-cols-3 gap-4">
-              <div className="grid gap-2"><Label>Salary (₵)</Label><Input type="number" value={form.salary} onChange={e => setForm({ ...form, salary: +e.target.value })} /></div>
+              <div className="grid gap-2"><Label>Salary (GHS)</Label><Input type="number" value={form.salary} onChange={e => setForm({ ...form, salary: +e.target.value })} /></div>
               <div className="grid gap-2"><Label>SSNIT %</Label><Input type="number" step="0.1" value={form.ssnit_percent} onChange={e => setForm({ ...form, ssnit_percent: +e.target.value })} /></div>
               <div className="grid gap-2"><Label>PAYE %</Label><Input type="number" step="0.1" value={form.paye_percent} onChange={e => setForm({ ...form, paye_percent: +e.target.value })} /></div>
             </div>
