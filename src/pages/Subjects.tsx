@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useData } from "@/contexts/DataContext";
+import type { Subject } from "@/contexts/DataContext";
 import PageHeader from "@/components/PageHeader";
 import DeleteDialog from "@/components/DeleteDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,29 +9,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Pencil, Trash2 } from "lucide-react";
-import type { Subject } from "@/data/mockData";
 import { toast } from "sonner";
 
-const emptySubject = { name: "", class: "All Classes" };
+const emptyForm = { name: "", class: "All Classes" };
 
 export default function Subjects() {
   const { subjects, addSubject, updateSubject, deleteSubject } = useData();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editing, setEditing] = useState<Subject | null>(null);
-  const [form, setForm] = useState(emptySubject);
+  const [form, setForm] = useState(emptyForm);
 
-  const openAdd = () => { setEditing(null); setForm(emptySubject); setDialogOpen(true); };
+  const openAdd = () => { setEditing(null); setForm(emptyForm); setDialogOpen(true); };
   const openEdit = (s: Subject) => { setEditing(s); setForm({ name: s.name, class: s.class }); setDialogOpen(true); };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim()) { toast.error("Subject name is required"); return; }
-    if (editing) { updateSubject(editing.id, form); toast.success("Subject updated"); }
-    else { addSubject(form); toast.success("Subject added"); }
+    if (editing) { await updateSubject(editing.id, form); toast.success("Subject updated"); }
+    else { await addSubject(form); toast.success("Subject added"); }
     setDialogOpen(false);
   };
 
-  const handleDelete = () => { if (editing) { deleteSubject(editing.id); toast.success("Subject deleted"); } setDeleteOpen(false); setEditing(null); };
+  const handleDelete = async () => { if (editing) { await deleteSubject(editing.id); toast.success("Subject deleted"); } setDeleteOpen(false); setEditing(null); };
 
   return (
     <div>
@@ -39,16 +39,14 @@ export default function Subjects() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Subject Name</TableHead>
-              <TableHead>Class</TableHead>
+              <TableHead>ID</TableHead><TableHead>Subject Name</TableHead><TableHead>Class</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {subjects.map(s => (
               <TableRow key={s.id}>
-                <TableCell className="font-mono text-xs">{s.id}</TableCell>
+                <TableCell className="font-mono text-xs">{s.subject_id}</TableCell>
                 <TableCell className="font-medium">{s.name}</TableCell>
                 <TableCell>{s.class}</TableCell>
                 <TableCell className="text-right">
@@ -60,7 +58,6 @@ export default function Subjects() {
           </TableBody>
         </Table>
       </div>
-
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader><DialogTitle>{editing ? "Edit Subject" : "Add Subject"}</DialogTitle></DialogHeader>

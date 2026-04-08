@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useData } from "@/contexts/DataContext";
-import { expenseCategories } from "@/data/mockData";
+import { useData, expenseCategories } from "@/contexts/DataContext";
+import type { Expense } from "@/contexts/DataContext";
 import PageHeader from "@/components/PageHeader";
 import DeleteDialog from "@/components/DeleteDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -11,29 +11,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pencil, Trash2 } from "lucide-react";
-import type { Expense } from "@/data/mockData";
 import { toast } from "sonner";
 
-const emptyExpense = { date: new Date().toISOString().slice(0, 10), category: "Utilities", amount: 0, notes: "" };
+const emptyForm = { date: new Date().toISOString().slice(0, 10), category: "Utilities", amount: 0, notes: "" };
 
 export default function Expenses() {
   const { expenses, addExpense, updateExpense, deleteExpense } = useData();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editing, setEditing] = useState<Expense | null>(null);
-  const [form, setForm] = useState(emptyExpense);
+  const [form, setForm] = useState(emptyForm);
 
-  const openAdd = () => { setEditing(null); setForm(emptyExpense); setDialogOpen(true); };
-  const openEdit = (e: Expense) => { setEditing(e); setForm({ date: e.date, category: e.category, amount: e.amount, notes: e.notes }); setDialogOpen(true); };
+  const openAdd = () => { setEditing(null); setForm({ ...emptyForm, date: new Date().toISOString().slice(0, 10) }); setDialogOpen(true); };
+  const openEdit = (e: Expense) => { setEditing(e); setForm({ date: e.date, category: e.category, amount: e.amount, notes: e.notes || "" }); setDialogOpen(true); };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (form.amount <= 0) { toast.error("Amount must be greater than 0"); return; }
-    if (editing) { updateExpense(editing.id, form); toast.success("Expense updated"); }
-    else { addExpense(form); toast.success("Expense added"); }
+    if (editing) { await updateExpense(editing.id, form); toast.success("Expense updated"); }
+    else { await addExpense(form); toast.success("Expense added"); }
     setDialogOpen(false);
   };
 
-  const handleDelete = () => { if (editing) { deleteExpense(editing.id); toast.success("Expense deleted"); } setDeleteOpen(false); setEditing(null); };
+  const handleDelete = async () => { if (editing) { await deleteExpense(editing.id); toast.success("Expense deleted"); } setDeleteOpen(false); setEditing(null); };
 
   return (
     <div>
@@ -42,18 +41,15 @@ export default function Expenses() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead className="text-right">Amount (₵)</TableHead>
-              <TableHead>Notes</TableHead>
+              <TableHead>ID</TableHead><TableHead>Date</TableHead><TableHead>Category</TableHead>
+              <TableHead className="text-right">Amount (₵)</TableHead><TableHead>Notes</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {expenses.map(e => (
               <TableRow key={e.id}>
-                <TableCell className="font-mono text-xs">{e.id}</TableCell>
+                <TableCell className="font-mono text-xs">{e.expense_id}</TableCell>
                 <TableCell>{e.date}</TableCell>
                 <TableCell><Badge variant="outline">{e.category}</Badge></TableCell>
                 <TableCell className="text-right">{e.amount.toLocaleString()}</TableCell>
@@ -67,7 +63,6 @@ export default function Expenses() {
           </TableBody>
         </Table>
       </div>
-
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader><DialogTitle>{editing ? "Edit Expense" : "Add Expense"}</DialogTitle></DialogHeader>
