@@ -42,7 +42,7 @@ export default function Expenses() {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead><TableHead>Date</TableHead><TableHead>Category</TableHead>
-              <TableHead className="text-right">Amount (₵)</TableHead><TableHead>Notes</TableHead>
+              <TableHead className="text-right">Amount (GHS)</TableHead><TableHead>Notes</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -77,7 +77,7 @@ export default function Expenses() {
                 </Select>
               </div>
             </div>
-            <div className="grid gap-2"><Label>Amount (₵)</Label><Input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: +e.target.value })} /></div>
+            <div className="grid gap-2"><Label>Amount (GHS)</Label><Input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: +e.target.value })} /></div>
             <div className="grid gap-2"><Label>Notes</Label><Input value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} /></div>
           </div>
           <DialogFooter>

@@ -37,7 +37,7 @@ export default function Reports() {
     const summaryData = [
       ["Glory Haven Montessori - Financial Report"],
       [],
-      ["Metric", "Amount (₵)"],
+      ["Metric", "Amount (GHS)"],
       ["Total Income", totalIncome],
       ["Total Expenses", totalExp],
       ["Total Payroll", totalPayroll],
@@ -82,10 +82,10 @@ export default function Reports() {
       </PageHeader>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Income" value={`₵${totalIncome.toLocaleString()}`} icon={Banknote} />
-        <StatCard title="Total Expenses" value={`₵${totalExp.toLocaleString()}`} icon={Receipt} />
-        <StatCard title="Total Payroll" value={`₵${totalPayroll.toFixed(0)}`} icon={Calculator} />
-        <StatCard title="Net Balance" value={`₵${netBalance.toFixed(0)}`} icon={TrendingUp} trendUp={netBalance > 0} trend={netBalance > 0 ? "Positive" : "Deficit"} />
+        <StatCard title="Total Income" value={`GHS ${totalIncome.toLocaleString()}`} icon={Banknote} />
+        <StatCard title="Total Expenses" value={`GHS ${totalExp.toLocaleString()}`} icon={Receipt} />
+        <StatCard title="Total Payroll" value={`GHS ${totalPayroll.toFixed(0)}`} icon={Calculator} />
+        <StatCard title="Net Balance" value={`GHS ${netBalance.toFixed(0)}`} icon={TrendingUp} trendUp={netBalance > 0} trend={netBalance > 0 ? "Positive" : "Deficit"} />
       </div>
 
       <div className="stat-card">
@@ -95,7 +95,7 @@ export default function Reports() {
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 90%)" />
             <XAxis dataKey="month" />
             <YAxis />
-            <Tooltip formatter={(v: number) => `₵${v.toLocaleString()}`} />
+            <Tooltip formatter={(v: number) => `GHS ${v.toLocaleString()}`} />
             <Legend />
             <Bar dataKey="income" fill="hsl(142, 71%, 45%)" radius={[4, 4, 0, 0]} name="Income" />
             <Bar dataKey="expenses" fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} name="Expenses" />

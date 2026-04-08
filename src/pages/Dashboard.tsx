@@ -20,14 +20,14 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Welcome back 👋</h1>
+        <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
         <p className="text-muted-foreground text-sm mt-1">Here's what's happening at Glory Haven Montessori</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total Students" value={students.length} icon={GraduationCap} trend="+2 this term" trendUp />
         <StatCard title="Total Staff" value={staff.length} icon={Users} />
-        <StatCard title="Income (GH₵)" value={`₵${totalIncome.toLocaleString()}`} icon={Banknote} trend="+12% vs last term" trendUp />
-        <StatCard title="Outstanding Fees" value={`₵${totalOutstanding.toLocaleString()}`} icon={TrendingUp} trend={`${fees.filter(f => f.amount_paid < f.total_fees).length} students owing`} />
+        <StatCard title="Income (GHS)" value={`GHS ${totalIncome.toLocaleString()}`} icon={Banknote} trend="+12% vs last term" trendUp />
+        <StatCard title="Outstanding Fees" value={`GHS ${totalOutstanding.toLocaleString()}`} icon={TrendingUp} trend={`${fees.filter(f => f.amount_paid < f.total_fees).length} students owing`} />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="stat-card">
@@ -49,15 +49,15 @@ export default function Dashboard() {
               <Pie data={expenseByCategory} cx="50%" cy="50%" outerRadius={90} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
                 {expenseByCategory.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
-              <Tooltip formatter={(v: number) => `₵${v.toLocaleString()}`} />
+              <Tooltip formatter={(v: number) => `GHS ${v.toLocaleString()}`} />
             </PieChart>
           </ResponsiveContainer>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Total Income</p><p className="text-xl font-bold text-success mt-1">₵{totalIncome.toLocaleString()}</p></div>
-        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Total Expenses</p><p className="text-xl font-bold text-destructive mt-1">₵{totalExpenses.toLocaleString()}</p></div>
-        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Net Balance</p><p className="text-xl font-bold text-foreground mt-1">₵{(totalIncome - totalExpenses).toLocaleString()}</p></div>
+        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Total Income</p><p className="text-xl font-bold text-success mt-1">GHS {totalIncome.toLocaleString()}</p></div>
+        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Total Expenses</p><p className="text-xl font-bold text-destructive mt-1">GHS {totalExpenses.toLocaleString()}</p></div>
+        <div className="stat-card text-center"><p className="text-sm text-muted-foreground">Net Balance</p><p className="text-xl font-bold text-foreground mt-1">GHS {(totalIncome - totalExpenses).toLocaleString()}</p></div>
       </div>
     </div>
   );

@@ -104,6 +104,9 @@ interface DataContextType {
   addSubject: (s: { name: string; class: string }) => Promise<void>;
   updateSubject: (id: string, s: Partial<Subject>) => Promise<void>;
   deleteSubject: (id: string) => Promise<void>;
+  addFee: (f: { student_id: string; student_name: string; class: string; term: string; total_fees: number; amount_paid: number }) => Promise<void>;
+  updateFee: (id: string, f: Partial<Fee>) => Promise<void>;
+  deleteFee: (id: string) => Promise<void>;
   addPayment: (p: { student_id: string; student_name: string; amount: number; date: string; method: string }) => Promise<void>;
   updatePayment: (id: string, p: Partial<Payment>) => Promise<void>;
   deletePayment: (id: string) => Promise<void>;
@@ -218,6 +221,19 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (error) toast.error(error.message); else fetchAll();
   };
 
+  const addFee = async (f: { student_id: string; student_name: string; class: string; term: string; total_fees: number; amount_paid: number }) => {
+    const { error } = await supabase.from("fees").insert({ student_id: f.student_id, student_name: f.student_name, class: f.class, term: f.term, total_fees: f.total_fees, amount_paid: f.amount_paid });
+    if (error) toast.error(error.message); else fetchAll();
+  };
+  const updateFee = async (id: string, f: Partial<Fee>) => {
+    const { error } = await supabase.from("fees").update(f).eq("id", id);
+    if (error) toast.error(error.message); else fetchAll();
+  };
+  const deleteFee = async (id: string) => {
+    const { error } = await supabase.from("fees").delete().eq("id", id);
+    if (error) toast.error(error.message); else fetchAll();
+  };
+
   const addPayment = async (p: { student_id: string; student_name: string; amount: number; date: string; method: string }) => {
     const { error } = await supabase.from("payments").insert({ payment_id: nextId("PAY"), student_id: p.student_id, student_name: p.student_name, amount: p.amount, date: p.date, method: p.method });
     if (error) { toast.error(error.message); return; }
@@ -259,6 +275,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       addStaff, updateStaff, deleteStaff,
       addClass, updateClass, deleteClass,
       addSubject, updateSubject, deleteSubject,
+      addFee, updateFee, deleteFee,
       addPayment, updatePayment, deletePayment,
       addExpense, updateExpense, deleteExpense,
     }}>

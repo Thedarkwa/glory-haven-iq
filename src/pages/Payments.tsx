@@ -50,7 +50,7 @@ export default function Payments() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead><TableHead>Student</TableHead><TableHead className="text-right">Amount (₵)</TableHead>
+              <TableHead>ID</TableHead><TableHead>Student</TableHead><TableHead className="text-right">Amount (GHS)</TableHead>
               <TableHead>Date</TableHead><TableHead>Method</TableHead><TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -83,7 +83,7 @@ export default function Payments() {
               </Select>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2"><Label>Amount (₵)</Label><Input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: +e.target.value })} /></div>
+              <div className="grid gap-2"><Label>Amount (GHS)</Label><Input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: +e.target.value })} /></div>
               <div className="grid gap-2"><Label>Date</Label><Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} /></div>
             </div>
             <div className="grid gap-2">
