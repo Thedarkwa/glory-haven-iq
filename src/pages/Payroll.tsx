@@ -13,12 +13,9 @@ export default function Payroll() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Staff ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead className="text-right">Basic (₵)</TableHead>
-              <TableHead className="text-right">SSNIT (₵)</TableHead>
-              <TableHead className="text-right">PAYE (₵)</TableHead>
-              <TableHead className="text-right">Deductions (₵)</TableHead>
+              <TableHead>Staff ID</TableHead><TableHead>Name</TableHead>
+              <TableHead className="text-right">Basic (₵)</TableHead><TableHead className="text-right">SSNIT (₵)</TableHead>
+              <TableHead className="text-right">PAYE (₵)</TableHead><TableHead className="text-right">Deductions (₵)</TableHead>
               <TableHead className="text-right font-bold">Net (₵)</TableHead>
             </TableRow>
           </TableHeader>

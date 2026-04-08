@@ -14,26 +14,22 @@ export default function Fees() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Student</TableHead>
-              <TableHead>Class</TableHead>
-              <TableHead>Term</TableHead>
-              <TableHead className="text-right">Total (₵)</TableHead>
-              <TableHead className="text-right">Paid (₵)</TableHead>
-              <TableHead>Progress</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Student</TableHead><TableHead>Class</TableHead><TableHead>Term</TableHead>
+              <TableHead className="text-right">Total (₵)</TableHead><TableHead className="text-right">Paid (₵)</TableHead>
+              <TableHead>Progress</TableHead><TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {fees.map(f => {
-              const pct = Math.round((f.amountPaid / f.totalFees) * 100);
+              const pct = f.total_fees > 0 ? Math.round((f.amount_paid / f.total_fees) * 100) : 0;
               const paid = pct >= 100;
               return (
-                <TableRow key={f.studentId}>
-                  <TableCell className="font-medium">{f.studentName}</TableCell>
+                <TableRow key={f.id}>
+                  <TableCell className="font-medium">{f.student_name}</TableCell>
                   <TableCell>{f.class}</TableCell>
                   <TableCell className="text-xs">{f.term}</TableCell>
-                  <TableCell className="text-right">{f.totalFees.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">{f.amountPaid.toLocaleString()}</TableCell>
+                  <TableCell className="text-right">{f.total_fees.toLocaleString()}</TableCell>
+                  <TableCell className="text-right">{f.amount_paid.toLocaleString()}</TableCell>
                   <TableCell className="w-32"><Progress value={Math.min(pct, 100)} className="h-2" /></TableCell>
                   <TableCell><Badge variant={paid ? "default" : "secondary"}>{paid ? "Paid" : `${pct}%`}</Badge></TableCell>
                 </TableRow>
