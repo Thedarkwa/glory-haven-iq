@@ -82,10 +82,10 @@ export default function Reports() {
       </PageHeader>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Income" value={`₵${totalIncome.toLocaleString()}`} icon={Banknote} />
-        <StatCard title="Total Expenses" value={`₵${totalExp.toLocaleString()}`} icon={Receipt} />
-        <StatCard title="Total Payroll" value={`₵${totalPayroll.toFixed(0)}`} icon={Calculator} />
-        <StatCard title="Net Balance" value={`₵${netBalance.toFixed(0)}`} icon={TrendingUp} trendUp={netBalance > 0} trend={netBalance > 0 ? "Positive" : "Deficit"} />
+        <StatCard title="Total Income" value={`GHS ${totalIncome.toLocaleString()}`} icon={Banknote} />
+        <StatCard title="Total Expenses" value={`GHS ${totalExp.toLocaleString()}`} icon={Receipt} />
+        <StatCard title="Total Payroll" value={`GHS ${totalPayroll.toFixed(0)}`} icon={Calculator} />
+        <StatCard title="Net Balance" value={`GHS ${netBalance.toFixed(0)}`} icon={TrendingUp} trendUp={netBalance > 0} trend={netBalance > 0 ? "Positive" : "Deficit"} />
       </div>
 
       <div className="stat-card">
