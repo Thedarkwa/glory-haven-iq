@@ -72,6 +72,15 @@ export interface Expense {
   notes: string | null;
 }
 
+export interface Attendance {
+  id: string;
+  student_id: string;
+  class_name: string;
+  date: string;
+  status: string;
+  marked_by: string | null;
+}
+
 export interface PayrollEntry {
   staffId: string;
   staffName: string;
@@ -91,6 +100,7 @@ interface DataContextType {
   payments: Payment[];
   expenses: Expense[];
   payroll: PayrollEntry[];
+  attendance: Attendance[];
   loading: boolean;
   refreshAll: () => void;
   addStudent: (s: { full_name: string; date_of_birth?: string; gender: string; class: string; guardian?: string; contact?: string }) => Promise<void>;
@@ -114,6 +124,8 @@ interface DataContextType {
   addExpense: (e: { date: string; category: string; amount: number; notes?: string }) => Promise<void>;
   updateExpense: (id: string, e: Partial<Expense>) => Promise<void>;
   deleteExpense: (id: string) => Promise<void>;
+  markAttendance: (records: { student_id: string; class_name: string; date: string; status: string }[]) => Promise<void>;
+  getAttendanceByDate: (className: string, date: string) => Attendance[];
 }
 
 const DataContext = createContext<DataContextType | null>(null);
@@ -130,12 +142,13 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [feeList, setFeeList] = useState<Fee[]>([]);
   const [paymentList, setPaymentList] = useState<Payment[]>([]);
   const [expenseList, setExpenseList] = useState<Expense[]>([]);
+  const [attendanceList, setAttendanceList] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAll = useCallback(async () => {
     if (!user) return;
     setLoading(true);
-    const [stuRes, staffRes, classRes, subRes, feeRes, payRes, expRes] = await Promise.all([
+    const [stuRes, staffRes, classRes, subRes, feeRes, payRes, expRes, attRes] = await Promise.all([
       supabase.from("students").select("*").order("created_at"),
       supabase.from("staff").select("*").order("created_at"),
       supabase.from("classes").select("*").order("created_at"),
@@ -143,6 +156,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       supabase.from("fees").select("*").order("created_at"),
       supabase.from("payments").select("*").order("created_at"),
       supabase.from("expenses").select("*").order("created_at"),
+      supabase.from("attendance").select("*").order("created_at"),
     ]);
     if (stuRes.data) setStudents(stuRes.data.map(s => ({ ...s, class: s.class })));
     if (staffRes.data) setStaffList(staffRes.data);
@@ -151,6 +165,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (feeRes.data) setFeeList(feeRes.data);
     if (payRes.data) setPaymentList(payRes.data);
     if (expRes.data) setExpenseList(expRes.data);
+    if (attRes.data) setAttendanceList(attRes.data);
     setLoading(false);
   }, [user]);
 
@@ -265,10 +280,27 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (error) toast.error(error.message); else fetchAll();
   };
 
+  const markAttendance = async (records: { student_id: string; class_name: string; date: string; status: string }[]) => {
+    for (const r of records) {
+      const { error } = await supabase.from("attendance").upsert(
+        { student_id: r.student_id, class_name: r.class_name, date: r.date, status: r.status, marked_by: user?.id },
+        { onConflict: "student_id,date" }
+      );
+      if (error) { toast.error(error.message); return; }
+    }
+    toast.success("Attendance saved");
+    fetchAll();
+  };
+
+  const getAttendanceByDate = (className: string, date: string): Attendance[] => {
+    return attendanceList.filter(a => a.class_name === className && a.date === date);
+  };
+
   return (
     <DataContext.Provider value={{
       students, staff: staffList, classes: classList, subjects: subjectList,
-      fees: feeList, payments: paymentList, expenses: expenseList, payroll, loading,
+      fees: feeList, payments: paymentList, expenses: expenseList, payroll,
+      attendance: attendanceList, loading,
       refreshAll: fetchAll,
       addStudent, updateStudent, deleteStudent,
       addStaff, updateStaff, deleteStaff,
@@ -277,6 +309,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       addFee, updateFee, deleteFee,
       addPayment, updatePayment, deletePayment,
       addExpense, updateExpense, deleteExpense,
+      markAttendance, getAttendanceByDate,
     }}>
       {children}
     </DataContext.Provider>
