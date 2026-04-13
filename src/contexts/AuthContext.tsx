@@ -6,28 +6,47 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  approved: boolean | null;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  user: null, session: null, loading: true, signOut: async () => {},
+  user: null, session: null, loading: true, approved: null, signOut: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [approved, setApproved] = useState<boolean | null>(null);
+
+  const checkApproval = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("approved")
+      .eq("user_id", userId)
+      .single();
+    setApproved(data?.approved ?? false);
+  };
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) {
+        setTimeout(() => checkApproval(session.user.id), 0);
+      } else {
+        setApproved(null);
+      }
       setLoading(false);
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkApproval(session.user.id);
+      }
       setLoading(false);
     });
 
@@ -38,10 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
+    setApproved(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, approved, signOut }}>
       {children}
     </AuthContext.Provider>
   );

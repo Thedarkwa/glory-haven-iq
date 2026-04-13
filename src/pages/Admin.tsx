@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Users, Shield, Trash2 } from "lucide-react";
+import { Users, Shield, Trash2, CheckCircle, XCircle } from "lucide-react";
 import DeleteDialog from "@/components/DeleteDialog";
 import PageHeader from "@/components/PageHeader";
 
@@ -16,6 +16,7 @@ interface UserProfile {
   user_id: string;
   display_name: string | null;
   role: string | null;
+  approved: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -40,7 +41,6 @@ export default function Admin() {
 
   const checkAdminAndLoad = async () => {
     if (!user) return;
-    // Check if current user is admin
     const { data: roleData } = await supabase
       .from("user_roles")
       .select("*")
@@ -64,7 +64,7 @@ export default function Admin() {
       supabase.from("user_roles").select("*"),
     ]);
 
-    if (profilesRes.data) setProfiles(profilesRes.data);
+    if (profilesRes.data) setProfiles(profilesRes.data as UserProfile[]);
     if (rolesRes.data) setUserRoles(rolesRes.data as UserRole[]);
     setLoading(false);
   };
@@ -78,15 +78,10 @@ export default function Admin() {
     const existing = userRoles.find((r) => r.user_id === userId);
 
     if (existing) {
-      const { error } = await supabase
-        .from("user_roles")
-        .update({ role: newRole })
-        .eq("user_id", userId);
+      const { error } = await supabase.from("user_roles").update({ role: newRole }).eq("user_id", userId);
       if (error) { toast.error("Failed to update role"); return; }
     } else {
-      const { error } = await supabase
-        .from("user_roles")
-        .insert({ user_id: userId, role: newRole });
+      const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: newRole });
       if (error) { toast.error("Failed to assign role"); return; }
     }
 
@@ -94,9 +89,18 @@ export default function Admin() {
     await loadData();
   };
 
+  const handleApproval = async (profile: UserProfile, approve: boolean) => {
+    const { error } = await supabase
+      .from("profiles")
+      .update({ approved: approve })
+      .eq("user_id", profile.user_id);
+    if (error) { toast.error("Failed to update approval"); return; }
+    toast.success(approve ? "User approved" : "User access revoked");
+    await loadData();
+  };
+
   const handleDeleteUser = async () => {
     if (!deleteTarget) return;
-    // Delete profile (cascade will handle user_roles if FK set up, otherwise delete manually)
     await supabase.from("user_roles").delete().eq("user_id", deleteTarget.user_id);
     const { error } = await supabase.from("profiles").delete().eq("user_id", deleteTarget.user_id);
     if (error) { toast.error("Failed to delete user profile"); return; }
@@ -113,6 +117,8 @@ export default function Admin() {
       default: return "outline";
     }
   };
+
+  const pendingCount = profiles.filter((p) => !p.approved).length;
 
   if (loading) {
     return <div className="flex items-center justify-center min-h-[50vh]"><p className="text-muted-foreground">Loading...</p></div>;
@@ -134,35 +140,36 @@ export default function Admin() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Admin Panel" description="Manage registered users and their roles" />
+      <PageHeader title="Admin Panel" description="Manage registered users, approvals, and roles" />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{profiles.length}</div>
-          </CardContent>
+          <CardContent><div className="text-2xl font-bold">{profiles.length}</div></CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Pending Approval</CardTitle>
+            <XCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent><div className="text-2xl font-bold text-destructive">{pendingCount}</div></CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Admins</CardTitle>
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{userRoles.filter((r) => r.role === "admin").length}</div>
-          </CardContent>
+          <CardContent><div className="text-2xl font-bold">{userRoles.filter((r) => r.role === "admin").length}</div></CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Teachers</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{userRoles.filter((r) => r.role === "teacher").length}</div>
-          </CardContent>
+          <CardContent><div className="text-2xl font-bold">{userRoles.filter((r) => r.role === "teacher").length}</div></CardContent>
         </Card>
       </div>
 
@@ -175,10 +182,11 @@ export default function Admin() {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Joined</TableHead>
-                <TableHead>Last Updated</TableHead>
                 <TableHead>Change Role</TableHead>
+                <TableHead>Approval</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -193,13 +201,15 @@ export default function Admin() {
                       {isSelf && <span className="text-xs text-muted-foreground ml-2">(you)</span>}
                     </TableCell>
                     <TableCell>
+                      <Badge variant={profile.approved ? "default" : "destructive"}>
+                        {profile.approved ? "Approved" : "Pending"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
                       <Badge variant={getRoleBadgeVariant(role) as any}>{role}</Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
                       {new Date(profile.created_at).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground text-sm">
-                      {new Date(profile.updated_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
                       <Select
@@ -219,6 +229,21 @@ export default function Admin() {
                     </TableCell>
                     <TableCell>
                       {!isSelf && (
+                        <Button
+                          variant={profile.approved ? "outline" : "default"}
+                          size="sm"
+                          onClick={() => handleApproval(profile, !profile.approved)}
+                        >
+                          {profile.approved ? (
+                            <><XCircle className="w-4 h-4 mr-1" /> Revoke</>
+                          ) : (
+                            <><CheckCircle className="w-4 h-4 mr-1" /> Approve</>
+                          )}
+                        </Button>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {!isSelf && (
                         <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(profile)}>
                           <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
@@ -229,7 +254,7 @@ export default function Admin() {
               })}
               {profiles.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                     No registered users found.
                   </TableCell>
                 </TableRow>
