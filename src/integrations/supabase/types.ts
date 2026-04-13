@@ -187,9 +187,11 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
+          date_of_birth: string | null
           id: string
           name: string
           paye_percent: number
+          photo_url: string | null
           role: string
           salary: number
           ssnit_percent: number
@@ -199,9 +201,11 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          date_of_birth?: string | null
           id?: string
           name: string
           paye_percent?: number
+          photo_url?: string | null
           role: string
           salary?: number
           ssnit_percent?: number
@@ -211,9 +215,11 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          date_of_birth?: string | null
           id?: string
           name?: string
           paye_percent?: number
+          photo_url?: string | null
           role?: string
           salary?: number
           ssnit_percent?: number
