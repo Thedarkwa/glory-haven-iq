@@ -10,25 +10,29 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import schoolLogo from "@/assets/logo.png";
 
-const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, path: "/" },
-  { label: "Students", icon: GraduationCap, path: "/students" },
-  { label: "Staff", icon: Users, path: "/staff" },
-  { label: "Classes", icon: School, path: "/classes" },
-  { label: "Subjects", icon: BookOpen, path: "/subjects" },
-  { label: "Fees", icon: Banknote, path: "/fees" },
-  { label: "Payments", icon: CreditCard, path: "/payments" },
-  { label: "Expenses", icon: Receipt, path: "/expenses" },
-  { label: "Payroll", icon: Calculator, path: "/payroll" },
-  { label: "Reports", icon: FileText, path: "/reports" },
-  { label: "Admin", icon: ShieldCheck, path: "/admin" },
+const allNavItems = [
+  { label: "Dashboard", icon: LayoutDashboard, path: "/", roles: ["admin", "accountant"] },
+  { label: "Students", icon: GraduationCap, path: "/students", roles: ["admin", "teacher", "accountant"] },
+  { label: "Staff", icon: Users, path: "/staff", roles: ["admin"] },
+  { label: "Classes", icon: School, path: "/classes", roles: ["admin", "teacher"] },
+  { label: "Subjects", icon: BookOpen, path: "/subjects", roles: ["admin", "teacher"] },
+  { label: "Fees", icon: Banknote, path: "/fees", roles: ["admin", "accountant"] },
+  { label: "Payments", icon: CreditCard, path: "/payments", roles: ["admin", "accountant"] },
+  { label: "Expenses", icon: Receipt, path: "/expenses", roles: ["admin", "accountant"] },
+  { label: "Payroll", icon: Calculator, path: "/payroll", roles: ["admin"] },
+  { label: "Reports", icon: FileText, path: "/reports", roles: ["admin", "accountant"] },
+  { label: "Admin", icon: ShieldCheck, path: "/admin", roles: ["admin"] },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const { signOut, user } = useAuth();
+  const { signOut, user, role } = useAuth();
+
+  const navItems = allNavItems.filter(
+    (item) => !role || item.roles.includes(role)
+  );
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -68,7 +72,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* User & Sign Out */}
         <div className="px-2 py-2 border-t border-sidebar-border">
           {!collapsed && user && (
-            <p className="text-xs text-sidebar-muted px-3 py-1 truncate">{user.email}</p>
+            <div className="px-3 py-1">
+              <p className="text-xs text-sidebar-muted truncate">{user.email}</p>
+              {role && <p className="text-xs text-sidebar-muted capitalize">{role}</p>}
+            </div>
           )}
           <button onClick={signOut}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors w-full">
@@ -87,7 +94,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="h-16 border-b border-border bg-card flex items-center px-4 md:px-6 shrink-0">
           <button onClick={() => setMobileOpen(true)} className="md:hidden mr-3 text-foreground"><Menu className="w-6 h-6" /></button>
           <h2 className="text-lg font-semibold text-foreground">
-            {navItems.find(n => n.path === location.pathname)?.label || "SchoolIQ"}
+            {allNavItems.find(n => n.path === location.pathname)?.label || "SchoolIQ"}
           </h2>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
