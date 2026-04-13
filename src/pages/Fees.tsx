@@ -17,7 +17,7 @@ import { toast } from "sonner";
 
 const emptyForm = { student_id: "", student_name: "", class: "Creche", term: CURRENT_TERM, total_fees: 0, amount_paid: 0 };
 
-const SCHOOL_NAME = "Bright Future Academy";
+const SCHOOL_NAME = "Glory Haven Montessori";
 
 function generateReceipt(f: Fee) {
   const balance = f.total_fees - f.amount_paid;
