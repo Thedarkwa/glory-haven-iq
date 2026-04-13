@@ -17,11 +17,12 @@ import { toast } from "sonner";
 
 const emptyForm = { student_id: "", student_name: "", class: "Creche", term: CURRENT_TERM, total_fees: 0, amount_paid: 0 };
 
-const SCHOOL_NAME = "Bright Future Academy";
+const SCHOOL_NAME = "Glory Haven Montessori";
 
 function generateReceipt(f: Fee) {
   const balance = f.total_fees - f.amount_paid;
   const date = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
+  const logoUrl = window.location.origin + "/images/logo.png";
 
   const html = `
 <!DOCTYPE html>
@@ -30,9 +31,10 @@ function generateReceipt(f: Fee) {
   @media print { @page { size: A5; margin: 10mm; } }
   body { font-family: 'Georgia', serif; max-width: 500px; margin: 0 auto; padding: 20px; color: #1a1a1a; }
   .header { text-align: center; border-bottom: 3px double #333; padding-bottom: 16px; margin-bottom: 20px; }
-  .header h1 { font-size: 22px; margin: 0; letter-spacing: 1px; }
+  .header h1 { font-size: 22px; margin: 0; letter-spacing: 1px; color: #4a1d7a; }
   .header p { margin: 4px 0; font-size: 12px; color: #555; }
-  .logo { width: 60px; height: 60px; margin: 0 auto 8px; background: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px; }
+  .logo { width: 80px; height: 80px; margin: 0 auto 8px; }
+  .logo img { width: 100%; height: 100%; object-fit: contain; }
   .receipt-title { text-align: center; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 16px 0; background: #f5f5f5; padding: 8px; border: 1px solid #ddd; }
   .info-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
   .info-table td { padding: 8px 4px; border-bottom: 1px solid #eee; }
@@ -50,9 +52,9 @@ function generateReceipt(f: Fee) {
   .status-partial { background: #fef9c3; color: #854d0e; }
 </style></head><body>
   <div class="header">
-    <div class="logo">BF</div>
+    <div class="logo"><img src="${logoUrl}" alt="School Logo" /></div>
     <h1>${SCHOOL_NAME}</h1>
-    <p>Excellence in Education</p>
+    <p>Priorizziamo l'intelligenza</p>
     <p>P.O. Box 123, Accra, Ghana</p>
   </div>
   <div class="receipt-title">Fee Payment Receipt</div>
