@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
@@ -57,16 +58,7 @@ export default function Auth() {
     setLoading(false);
   };
 
-  const handleForgotPassword = async () => {
-    if (!email) { toast.error("Enter your email first"); return; }
-    setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    if (error) toast.error(error.message);
-    else toast.success("Password reset email sent!");
-    setLoading(false);
-  };
+
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -106,9 +98,9 @@ export default function Auth() {
                     {loading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
-                <button onClick={handleForgotPassword} className="text-sm text-accent hover:underline w-full text-center">
+                <Link to="/forgot-password" className="text-sm text-accent hover:underline w-full text-center block">
                   Forgot password?
-                </button>
+                </Link>
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
                   <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">or</span></div>
