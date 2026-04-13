@@ -22,6 +22,7 @@ const SCHOOL_NAME = "Glory Haven Montessori";
 function generateReceipt(f: Fee) {
   const balance = f.total_fees - f.amount_paid;
   const date = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
+  const logoUrl = window.location.origin + "/images/logo.png";
 
   const html = `
 <!DOCTYPE html>
