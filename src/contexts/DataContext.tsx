@@ -142,12 +142,13 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [feeList, setFeeList] = useState<Fee[]>([]);
   const [paymentList, setPaymentList] = useState<Payment[]>([]);
   const [expenseList, setExpenseList] = useState<Expense[]>([]);
+  const [attendanceList, setAttendanceList] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAll = useCallback(async () => {
     if (!user) return;
     setLoading(true);
-    const [stuRes, staffRes, classRes, subRes, feeRes, payRes, expRes] = await Promise.all([
+    const [stuRes, staffRes, classRes, subRes, feeRes, payRes, expRes, attRes] = await Promise.all([
       supabase.from("students").select("*").order("created_at"),
       supabase.from("staff").select("*").order("created_at"),
       supabase.from("classes").select("*").order("created_at"),
@@ -155,6 +156,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       supabase.from("fees").select("*").order("created_at"),
       supabase.from("payments").select("*").order("created_at"),
       supabase.from("expenses").select("*").order("created_at"),
+      supabase.from("attendance").select("*").order("created_at"),
     ]);
     if (stuRes.data) setStudents(stuRes.data.map(s => ({ ...s, class: s.class })));
     if (staffRes.data) setStaffList(staffRes.data);
@@ -163,6 +165,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (feeRes.data) setFeeList(feeRes.data);
     if (payRes.data) setPaymentList(payRes.data);
     if (expRes.data) setExpenseList(expRes.data);
+    if (attRes.data) setAttendanceList(attRes.data);
     setLoading(false);
   }, [user]);
 
