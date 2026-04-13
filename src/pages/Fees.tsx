@@ -52,9 +52,9 @@ function generateReceipt(f: Fee) {
   .status-partial { background: #fef9c3; color: #854d0e; }
 </style></head><body>
   <div class="header">
-    <div class="logo">BF</div>
+    <div class="logo"><img src="${logoUrl}" alt="School Logo" /></div>
     <h1>${SCHOOL_NAME}</h1>
-    <p>Excellence in Education</p>
+    <p>Priorizziamo l'intelligenza</p>
     <p>P.O. Box 123, Accra, Ghana</p>
   </div>
   <div class="receipt-title">Fee Payment Receipt</div>
