@@ -31,9 +31,10 @@ function generateReceipt(f: Fee) {
   @media print { @page { size: A5; margin: 10mm; } }
   body { font-family: 'Georgia', serif; max-width: 500px; margin: 0 auto; padding: 20px; color: #1a1a1a; }
   .header { text-align: center; border-bottom: 3px double #333; padding-bottom: 16px; margin-bottom: 20px; }
-  .header h1 { font-size: 22px; margin: 0; letter-spacing: 1px; }
+  .header h1 { font-size: 22px; margin: 0; letter-spacing: 1px; color: #4a1d7a; }
   .header p { margin: 4px 0; font-size: 12px; color: #555; }
-  .logo { width: 60px; height: 60px; margin: 0 auto 8px; background: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px; }
+  .logo { width: 80px; height: 80px; margin: 0 auto 8px; }
+  .logo img { width: 100%; height: 100%; object-fit: contain; }
   .receipt-title { text-align: center; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 16px 0; background: #f5f5f5; padding: 8px; border: 1px solid #ddd; }
   .info-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
   .info-table td { padding: 8px 4px; border-bottom: 1px solid #eee; }
