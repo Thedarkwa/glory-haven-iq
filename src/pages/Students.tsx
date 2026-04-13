@@ -6,6 +6,8 @@ import SearchBar from "@/components/SearchBar";
 import DeleteDialog from "@/components/DeleteDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -18,7 +20,17 @@ import { toast } from "sonner";
 const emptyForm = { full_name: "", date_of_birth: "", gender: "Male", class: "Creche", guardian: "", contact: "" };
 
 export default function Students() {
-  const { students, addStudent, updateStudent, deleteStudent } = useData();
+  const { students, addStudent, updateStudent, deleteStudent, attendance } = useData();
+
+  const getAttendanceSummary = (studentId: string) => {
+    const records = attendance.filter(a => a.student_id === studentId);
+    const total = records.length;
+    const present = records.filter(a => a.status === "present").length;
+    const absent = records.filter(a => a.status === "absent").length;
+    const late = records.filter(a => a.status === "late").length;
+    const rate = total > 0 ? Math.round(((present + late) / total) * 100) : null;
+    return { total, present, absent, late, rate };
+  };
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("All Students");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -61,18 +73,40 @@ export default function Students() {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead><TableHead>Full Name</TableHead><TableHead>Gender</TableHead>
-              <TableHead>Class</TableHead><TableHead>Guardian</TableHead><TableHead>Contact</TableHead>
+              <TableHead>Class</TableHead><TableHead>Attendance</TableHead><TableHead>Guardian</TableHead><TableHead>Contact</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.length === 0 && <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground py-8">No students found</TableCell></TableRow>}
-            {filtered.map(s => (
+            {filtered.length === 0 && <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">No students found</TableCell></TableRow>}
+            {filtered.map(s => {
+              const att = getAttendanceSummary(s.id);
+              return (
               <TableRow key={s.id}>
                 <TableCell className="font-mono text-xs">{s.student_id}</TableCell>
                 <TableCell className="font-medium">{s.full_name}</TableCell>
                 <TableCell><Badge variant={s.gender === "Male" ? "default" : "secondary"}>{s.gender}</Badge></TableCell>
                 <TableCell>{s.class}</TableCell>
+                <TableCell>
+                  {att.total === 0 ? (
+                    <span className="text-xs text-muted-foreground">No records</span>
+                  ) : (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 min-w-[120px]">
+                            <Progress value={att.rate ?? 0} className="h-2 flex-1" />
+                            <span className="text-xs font-medium whitespace-nowrap">{att.rate}%</span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Present: {att.present} | Late: {att.late} | Absent: {att.absent}</p>
+                          <p className="text-xs text-muted-foreground">Total: {att.total} days</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </TableCell>
                 <TableCell>{s.guardian}</TableCell>
                 <TableCell>{s.contact}</TableCell>
                 <TableCell className="text-right">
@@ -80,7 +114,8 @@ export default function Students() {
                   <Button variant="ghost" size="icon" onClick={() => { setEditing(s); setDeleteOpen(true); }}><Trash2 className="w-4 h-4 text-destructive" /></Button>
                 </TableCell>
               </TableRow>
-            ))}
+              );
+            })}
           </TableBody>
         </Table>
       </div>
