@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,30 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
+  const [checking, setChecking] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Listen for the PASSWORD_RECOVERY event which fires when
+    // Supabase processes the recovery token from the URL hash
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setSessionReady(true);
+        setChecking(false);
+      }
+    });
+
+    // Also check if there's already a session (user may have already been authenticated via the link)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setSessionReady(true);
+      }
+      setChecking(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,9 +43,33 @@ export default function ResetPassword() {
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
     if (error) toast.error(error.message);
-    else { toast.success("Password updated!"); navigate("/"); }
+    else { toast.success("Password updated successfully!"); navigate("/auth"); }
     setLoading(false);
   };
+
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <p className="text-muted-foreground">Verifying reset link...</p>
+      </div>
+    );
+  }
+
+  if (!sessionReady) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader><CardTitle>Invalid or Expired Link</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">This password reset link is invalid or has expired. Please request a new one.</p>
+            <Button className="w-full" onClick={() => navigate("/forgot-password")}>
+              Request New Reset Link
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
