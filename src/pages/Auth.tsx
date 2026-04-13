@@ -106,9 +106,9 @@ export default function Auth() {
                     {loading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
-                <button onClick={handleForgotPassword} className="text-sm text-accent hover:underline w-full text-center">
+                <Link to="/forgot-password" className="text-sm text-accent hover:underline w-full text-center block">
                   Forgot password?
-                </button>
+                </Link>
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
                   <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">or</span></div>
