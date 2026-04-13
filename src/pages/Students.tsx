@@ -18,7 +18,17 @@ import { toast } from "sonner";
 const emptyForm = { full_name: "", date_of_birth: "", gender: "Male", class: "Creche", guardian: "", contact: "" };
 
 export default function Students() {
-  const { students, addStudent, updateStudent, deleteStudent } = useData();
+  const { students, addStudent, updateStudent, deleteStudent, attendance } = useData();
+
+  const getAttendanceSummary = (studentId: string) => {
+    const records = attendance.filter(a => a.student_id === studentId);
+    const total = records.length;
+    const present = records.filter(a => a.status === "present").length;
+    const absent = records.filter(a => a.status === "absent").length;
+    const late = records.filter(a => a.status === "late").length;
+    const rate = total > 0 ? Math.round(((present + late) / total) * 100) : null;
+    return { total, present, absent, late, rate };
+  };
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("All Students");
   const [dialogOpen, setDialogOpen] = useState(false);
