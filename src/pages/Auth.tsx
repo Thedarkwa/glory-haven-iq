@@ -39,7 +39,7 @@ export default function Auth() {
       },
     });
     if (error) toast.error(error.message);
-    else toast.success("Check your email to verify your account!");
+    else toast.success("Account created! Awaiting admin approval.");
     setLoading(false);
   };
 
