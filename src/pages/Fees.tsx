@@ -55,7 +55,7 @@ function generateReceipt(f: Fee) {
     <div class="logo"><img src="${logoUrl}" alt="School Logo" /></div>
     <h1>${SCHOOL_NAME}</h1>
     <p>Priorizziamo l'intelligenza</p>
-    <p>P.O. Box 123, Accra, Ghana</p>
+    
   </div>
   <div class="receipt-title">Fee Payment Receipt</div>
   <table class="info-table">
