@@ -8,6 +8,7 @@ import { DataProvider } from "@/contexts/DataContext";
 import AppLayout from "@/components/AppLayout";
 import Auth from "@/pages/Auth";
 import ResetPassword from "@/pages/ResetPassword";
+import ForgotPassword from "@/pages/ForgotPassword";
 import Dashboard from "@/pages/Dashboard";
 import Students from "@/pages/Students";
 import StaffPage from "@/pages/StaffPage";
