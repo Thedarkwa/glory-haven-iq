@@ -4,7 +4,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CURRENT_TERM, classNames, expenseCategories, paymentMethods, classCategories } from "@/data/mockData";
 import { toast } from "sonner";
 
-// Re-export constants
 export { CURRENT_TERM, classNames, expenseCategories, paymentMethods, classCategories };
 
 export interface Student {
@@ -26,6 +25,8 @@ export interface StaffMember {
   salary: number;
   ssnit_percent: number;
   paye_percent: number;
+  date_of_birth: string | null;
+  photo_url: string | null;
 }
 
 export interface ClassRoom {
@@ -95,7 +96,7 @@ interface DataContextType {
   addStudent: (s: { full_name: string; date_of_birth?: string; gender: string; class: string; guardian?: string; contact?: string }) => Promise<void>;
   updateStudent: (id: string, s: Partial<Student>) => Promise<void>;
   deleteStudent: (id: string) => Promise<void>;
-  addStaff: (s: { name: string; role: string; salary: number; ssnit_percent: number; paye_percent: number }) => Promise<void>;
+  addStaff: (s: { name: string; role: string; date_of_birth?: string; photo_url?: string }) => Promise<void>;
   updateStaff: (id: string, s: Partial<StaffMember>) => Promise<void>;
   deleteStaff: (id: string) => Promise<void>;
   addClass: (c: { name: string; teacher_assigned?: string }) => Promise<void>;
@@ -167,7 +168,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const totalFees = s.class.startsWith("KG") || s.class.startsWith("Pre") || s.class.startsWith("Creche") || s.class.startsWith("Nursery") ? 1200 : 1500;
     const { data, error } = await supabase.from("students").insert({ student_id: sid, full_name: s.full_name, date_of_birth: s.date_of_birth || null, gender: s.gender, class: s.class, guardian: s.guardian || null, contact: s.contact || null, created_by: user?.id }).select().single();
     if (error) { toast.error(error.message); return; }
-    // Create fee record
     await supabase.from("fees").insert({ student_id: data.id, student_name: s.full_name, class: s.class, term: CURRENT_TERM, total_fees: totalFees, amount_paid: 0 });
     fetchAll();
   };
@@ -182,8 +182,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (error) toast.error(error.message); else fetchAll();
   };
 
-  const addStaff = async (s: { name: string; role: string; salary: number; ssnit_percent: number; paye_percent: number }) => {
-    const { error } = await supabase.from("staff").insert({ staff_id: nextId("STF"), ...s, created_by: user?.id });
+  const addStaff = async (s: { name: string; role: string; date_of_birth?: string; photo_url?: string }) => {
+    const { error } = await supabase.from("staff").insert({ staff_id: nextId("STF"), name: s.name, role: s.role, date_of_birth: s.date_of_birth || null, photo_url: s.photo_url || null, created_by: user?.id });
     if (error) toast.error(error.message); else fetchAll();
   };
   const updateStaff = async (id: string, s: Partial<StaffMember>) => {
@@ -237,7 +237,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const addPayment = async (p: { student_id: string; student_name: string; amount: number; date: string; method: string }) => {
     const { error } = await supabase.from("payments").insert({ payment_id: nextId("PAY"), student_id: p.student_id, student_name: p.student_name, amount: p.amount, date: p.date, method: p.method });
     if (error) { toast.error(error.message); return; }
-    // Update fee amount_paid
     const fee = feeList.find(f => f.student_id === p.student_id);
     if (fee) {
       await supabase.from("fees").update({ amount_paid: fee.amount_paid + p.amount }).eq("id", fee.id);

@@ -12,10 +12,82 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, FileDown } from "lucide-react";
 import { toast } from "sonner";
 
 const emptyForm = { student_id: "", student_name: "", class: "Creche", term: CURRENT_TERM, total_fees: 0, amount_paid: 0 };
+
+const SCHOOL_NAME = "Bright Future Academy";
+
+function generateReceipt(f: Fee) {
+  const balance = f.total_fees - f.amount_paid;
+  const date = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
+
+  const html = `
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Fee Receipt</title>
+<style>
+  @media print { @page { size: A5; margin: 10mm; } }
+  body { font-family: 'Georgia', serif; max-width: 500px; margin: 0 auto; padding: 20px; color: #1a1a1a; }
+  .header { text-align: center; border-bottom: 3px double #333; padding-bottom: 16px; margin-bottom: 20px; }
+  .header h1 { font-size: 22px; margin: 0; letter-spacing: 1px; }
+  .header p { margin: 4px 0; font-size: 12px; color: #555; }
+  .logo { width: 60px; height: 60px; margin: 0 auto 8px; background: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px; }
+  .receipt-title { text-align: center; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 16px 0; background: #f5f5f5; padding: 8px; border: 1px solid #ddd; }
+  .info-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .info-table td { padding: 8px 4px; border-bottom: 1px solid #eee; }
+  .info-table td:first-child { font-weight: bold; width: 40%; color: #555; }
+  .totals { margin: 20px 0; padding: 12px; background: #f9f9f9; border: 1px solid #ddd; }
+  .totals table { width: 100%; }
+  .totals td { padding: 6px 4px; }
+  .totals .total-row { font-weight: bold; font-size: 16px; border-top: 2px solid #333; }
+  .signature-area { margin-top: 50px; display: flex; justify-content: space-between; }
+  .sig-block { text-align: center; width: 45%; }
+  .sig-line { border-top: 1px solid #333; margin-top: 50px; padding-top: 4px; font-size: 12px; }
+  .footer { text-align: center; margin-top: 30px; font-size: 10px; color: #888; border-top: 1px solid #ddd; padding-top: 8px; }
+  .status { display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+  .status-paid { background: #dcfce7; color: #166534; }
+  .status-partial { background: #fef9c3; color: #854d0e; }
+</style></head><body>
+  <div class="header">
+    <div class="logo">BF</div>
+    <h1>${SCHOOL_NAME}</h1>
+    <p>Excellence in Education</p>
+    <p>P.O. Box 123, Accra, Ghana</p>
+  </div>
+  <div class="receipt-title">Fee Payment Receipt</div>
+  <table class="info-table">
+    <tr><td>Receipt Date:</td><td>${date}</td></tr>
+    <tr><td>Student Name:</td><td>${f.student_name}</td></tr>
+    <tr><td>Class:</td><td>${f.class}</td></tr>
+    <tr><td>Term:</td><td>${f.term}</td></tr>
+  </table>
+  <div class="totals">
+    <table>
+      <tr><td>Total Fees:</td><td style="text-align:right">GHS ${f.total_fees.toLocaleString()}</td></tr>
+      <tr><td>Amount Paid:</td><td style="text-align:right">GHS ${f.amount_paid.toLocaleString()}</td></tr>
+      <tr class="total-row"><td>Balance:</td><td style="text-align:right">GHS ${balance.toLocaleString()}</td></tr>
+    </table>
+  </div>
+  <p style="text-align:center"><span class="status ${balance <= 0 ? 'status-paid' : 'status-partial'}">${balance <= 0 ? 'FULLY PAID' : 'BALANCE OUTSTANDING'}</span></p>
+  <div class="signature-area">
+    <div class="sig-block"><div class="sig-line">Accountant</div></div>
+    <div class="sig-block"><div class="sig-line">Headteacher</div></div>
+  </div>
+  <div class="footer">
+    <p>This is a computer-generated receipt. Thank you for your payment.</p>
+    <p>${SCHOOL_NAME} &copy; ${new Date().getFullYear()}</p>
+  </div>
+</body></html>`;
+
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, "_blank");
+  if (w) {
+    w.onload = () => { w.print(); };
+  }
+  toast.success("Receipt generated — use the print dialog to save as PDF");
+}
 
 export default function Fees() {
   const { fees, students, addFee, updateFee, deleteFee } = useData();
@@ -71,7 +143,8 @@ export default function Fees() {
                   <TableCell className="text-right">{f.amount_paid.toLocaleString()}</TableCell>
                   <TableCell className="w-32"><Progress value={Math.min(pct, 100)} className="h-2" /></TableCell>
                   <TableCell><Badge variant={paid ? "default" : "secondary"}>{paid ? "Paid" : `${pct}%`}</Badge></TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right space-x-1">
+                    <Button variant="ghost" size="icon" onClick={() => generateReceipt(f)} title="Download Receipt"><FileDown className="w-4 h-4 text-primary" /></Button>
                     <Button variant="ghost" size="icon" onClick={() => openEdit(f)}><Pencil className="w-4 h-4" /></Button>
                     <Button variant="ghost" size="icon" onClick={() => { setEditing(f); setDeleteOpen(true); }}><Trash2 className="w-4 h-4 text-destructive" /></Button>
                   </TableCell>
