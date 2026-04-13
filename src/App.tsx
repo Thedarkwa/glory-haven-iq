@@ -23,10 +23,27 @@ import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
+function PendingApproval() {
+  const { signOut } = useAuth();
+  return (
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="text-center max-w-md space-y-4">
+        <div className="w-16 h-16 mx-auto rounded-full bg-muted flex items-center justify-center">
+          <svg className="w-8 h-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </div>
+        <h2 className="text-xl font-semibold text-foreground">Account Pending Approval</h2>
+        <p className="text-muted-foreground">Your account is awaiting admin approval. You'll be able to access the app once approved.</p>
+        <button onClick={signOut} className="text-sm text-accent hover:underline">Sign out</button>
+      </div>
+    </div>
+  );
+}
+
 function ProtectedRoutes() {
-  const { user, loading } = useAuth();
+  const { user, loading, approved } = useAuth();
   if (loading) return <div className="flex items-center justify-center min-h-screen"><p className="text-muted-foreground">Loading...</p></div>;
   if (!user) return <Navigate to="/auth" replace />;
+  if (approved === false) return <PendingApproval />;
 
   return (
     <DataProvider>
