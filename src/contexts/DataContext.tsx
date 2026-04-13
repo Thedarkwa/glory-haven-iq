@@ -280,10 +280,27 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (error) toast.error(error.message); else fetchAll();
   };
 
+  const markAttendance = async (records: { student_id: string; class_name: string; date: string; status: string }[]) => {
+    for (const r of records) {
+      const { error } = await supabase.from("attendance").upsert(
+        { student_id: r.student_id, class_name: r.class_name, date: r.date, status: r.status, marked_by: user?.id },
+        { onConflict: "student_id,date" }
+      );
+      if (error) { toast.error(error.message); return; }
+    }
+    toast.success("Attendance saved");
+    fetchAll();
+  };
+
+  const getAttendanceByDate = (className: string, date: string): Attendance[] => {
+    return attendanceList.filter(a => a.class_name === className && a.date === date);
+  };
+
   return (
     <DataContext.Provider value={{
       students, staff: staffList, classes: classList, subjects: subjectList,
-      fees: feeList, payments: paymentList, expenses: expenseList, payroll, loading,
+      fees: feeList, payments: paymentList, expenses: expenseList, payroll,
+      attendance: attendanceList, loading,
       refreshAll: fetchAll,
       addStudent, updateStudent, deleteStudent,
       addStaff, updateStaff, deleteStaff,
@@ -292,6 +309,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       addFee, updateFee, deleteFee,
       addPayment, updatePayment, deletePayment,
       addExpense, updateExpense, deleteExpense,
+      markAttendance, getAttendanceByDate,
     }}>
       {children}
     </DataContext.Provider>
