@@ -72,6 +72,15 @@ export interface Expense {
   notes: string | null;
 }
 
+export interface Attendance {
+  id: string;
+  student_id: string;
+  class_name: string;
+  date: string;
+  status: string;
+  marked_by: string | null;
+}
+
 export interface PayrollEntry {
   staffId: string;
   staffName: string;
@@ -91,6 +100,7 @@ interface DataContextType {
   payments: Payment[];
   expenses: Expense[];
   payroll: PayrollEntry[];
+  attendance: Attendance[];
   loading: boolean;
   refreshAll: () => void;
   addStudent: (s: { full_name: string; date_of_birth?: string; gender: string; class: string; guardian?: string; contact?: string }) => Promise<void>;
@@ -114,6 +124,8 @@ interface DataContextType {
   addExpense: (e: { date: string; category: string; amount: number; notes?: string }) => Promise<void>;
   updateExpense: (id: string, e: Partial<Expense>) => Promise<void>;
   deleteExpense: (id: string) => Promise<void>;
+  markAttendance: (records: { student_id: string; class_name: string; date: string; status: string }[]) => Promise<void>;
+  getAttendanceByDate: (className: string, date: string) => Attendance[];
 }
 
 const DataContext = createContext<DataContextType | null>(null);
