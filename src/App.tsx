@@ -40,27 +40,70 @@ function PendingApproval() {
   );
 }
 
+function AccessDenied() {
+  return (
+    <div className="flex items-center justify-center min-h-[50vh]">
+      <div className="text-center max-w-md space-y-2">
+        <h2 className="text-xl font-semibold text-foreground">Access Restricted</h2>
+        <p className="text-muted-foreground">You don't have permission to access this section.</p>
+      </div>
+    </div>
+  );
+}
+
+// Route access map: which roles can access which routes
+const routeAccess: Record<string, string[]> = {
+  "/": ["admin", "accountant"],
+  "/students": ["admin", "teacher", "accountant"],
+  "/staff": ["admin"],
+  "/classes": ["admin", "teacher"],
+  "/subjects": ["admin", "teacher"],
+  "/fees": ["admin", "accountant"],
+  "/payments": ["admin", "accountant"],
+  "/expenses": ["admin", "accountant"],
+  "/payroll": ["admin"],
+  "/reports": ["admin", "accountant"],
+  "/admin": ["admin"],
+};
+
+function RoleGuard({ allowedRoles, children }: { allowedRoles: string[]; children: React.ReactNode }) {
+  const { role } = useAuth();
+  if (role && !allowedRoles.includes(role)) return <AccessDenied />;
+  return <>{children}</>;
+}
+
+function getDefaultRoute(role: string | null): string {
+  if (!role || role === "admin" || role === "accountant") return "/";
+  if (role === "teacher") return "/students";
+  return "/";
+}
+
 function ProtectedRoutes() {
-  const { user, loading, approved } = useAuth();
+  const { user, loading, approved, role } = useAuth();
   if (loading) return <div className="flex items-center justify-center min-h-screen"><p className="text-muted-foreground">Loading...</p></div>;
   if (!user) return <Navigate to="/auth" replace />;
   if (approved === false) return <PendingApproval />;
+
+  const defaultRoute = getDefaultRoute(role);
 
   return (
     <DataProvider>
       <AppLayout>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/students" element={<Students />} />
-          <Route path="/staff" element={<StaffPage />} />
-          <Route path="/classes" element={<Classes />} />
-          <Route path="/subjects" element={<Subjects />} />
-          <Route path="/fees" element={<Fees />} />
-          <Route path="/payments" element={<Payments />} />
-          <Route path="/expenses" element={<Expenses />} />
-          <Route path="/payroll" element={<Payroll />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/" element={
+            role === "teacher" ? <Navigate to={defaultRoute} replace /> :
+            <RoleGuard allowedRoles={routeAccess["/"]}><Dashboard /></RoleGuard>
+          } />
+          <Route path="/students" element={<RoleGuard allowedRoles={routeAccess["/students"]}><Students /></RoleGuard>} />
+          <Route path="/staff" element={<RoleGuard allowedRoles={routeAccess["/staff"]}><StaffPage /></RoleGuard>} />
+          <Route path="/classes" element={<RoleGuard allowedRoles={routeAccess["/classes"]}><Classes /></RoleGuard>} />
+          <Route path="/subjects" element={<RoleGuard allowedRoles={routeAccess["/subjects"]}><Subjects /></RoleGuard>} />
+          <Route path="/fees" element={<RoleGuard allowedRoles={routeAccess["/fees"]}><Fees /></RoleGuard>} />
+          <Route path="/payments" element={<RoleGuard allowedRoles={routeAccess["/payments"]}><Payments /></RoleGuard>} />
+          <Route path="/expenses" element={<RoleGuard allowedRoles={routeAccess["/expenses"]}><Expenses /></RoleGuard>} />
+          <Route path="/payroll" element={<RoleGuard allowedRoles={routeAccess["/payroll"]}><Payroll /></RoleGuard>} />
+          <Route path="/reports" element={<RoleGuard allowedRoles={routeAccess["/reports"]}><Reports /></RoleGuard>} />
+          <Route path="/admin" element={<RoleGuard allowedRoles={routeAccess["/admin"]}><Admin /></RoleGuard>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AppLayout>
