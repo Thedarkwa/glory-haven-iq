@@ -55,7 +55,7 @@ export default function Payroll() {
 
   return (
     <div>
-      <PageHeader title="Payroll" description="Monthly salary calculations with SSNIT & PAYE deductions" action={{ label: "Add to Payroll", onClick: openAdd, icon: Plus }} />
+      <PageHeader title="Payroll" description="Monthly salary calculations with SSNIT & PAYE deductions" action={{ label: "Add to Payroll", onClick: openAdd }} />
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <Table>
           <TableHeader>
