@@ -215,12 +215,14 @@ export type Database = {
       }
       staff: {
         Row: {
+          address: string | null
           created_at: string
           created_by: string | null
           date_of_birth: string | null
           id: string
           name: string
           paye_percent: number
+          phone: string | null
           photo_url: string | null
           role: string
           salary: number
@@ -229,12 +231,14 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          address?: string | null
           created_at?: string
           created_by?: string | null
           date_of_birth?: string | null
           id?: string
           name: string
           paye_percent?: number
+          phone?: string | null
           photo_url?: string | null
           role: string
           salary?: number
@@ -243,12 +247,14 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          address?: string | null
           created_at?: string
           created_by?: string | null
           date_of_birth?: string | null
           id?: string
           name?: string
           paye_percent?: number
+          phone?: string | null
           photo_url?: string | null
           role?: string
           salary?: number
