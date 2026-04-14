@@ -27,6 +27,8 @@ export interface StaffMember {
   paye_percent: number;
   date_of_birth: string | null;
   photo_url: string | null;
+  address: string | null;
+  phone: string | null;
 }
 
 export interface ClassRoom {
@@ -106,7 +108,7 @@ interface DataContextType {
   addStudent: (s: { full_name: string; date_of_birth?: string; gender: string; class: string; guardian?: string; contact?: string }) => Promise<void>;
   updateStudent: (id: string, s: Partial<Student>) => Promise<void>;
   deleteStudent: (id: string) => Promise<void>;
-  addStaff: (s: { name: string; role: string; date_of_birth?: string; photo_url?: string }) => Promise<void>;
+  addStaff: (s: { name: string; role: string; date_of_birth?: string; photo_url?: string; address?: string; phone?: string }) => Promise<void>;
   updateStaff: (id: string, s: Partial<StaffMember>) => Promise<void>;
   deleteStaff: (id: string) => Promise<void>;
   addClass: (c: { name: string; teacher_assigned?: string }) => Promise<void>;
@@ -197,8 +199,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (error) toast.error(error.message); else fetchAll();
   };
 
-  const addStaff = async (s: { name: string; role: string; date_of_birth?: string; photo_url?: string }) => {
-    const { error } = await supabase.from("staff").insert({ staff_id: nextId("STF"), name: s.name, role: s.role, date_of_birth: s.date_of_birth || null, photo_url: s.photo_url || null, created_by: user?.id });
+  const addStaff = async (s: { name: string; role: string; date_of_birth?: string; photo_url?: string; address?: string; phone?: string }) => {
+    const { error } = await supabase.from("staff").insert({ staff_id: nextId("STF"), name: s.name, role: s.role, date_of_birth: s.date_of_birth || null, photo_url: s.photo_url || null, address: s.address || null, phone: s.phone || null, created_by: user?.id });
     if (error) toast.error(error.message); else fetchAll();
   };
   const updateStaff = async (id: string, s: Partial<StaffMember>) => {
