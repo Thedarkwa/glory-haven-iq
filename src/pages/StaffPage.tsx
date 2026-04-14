@@ -15,7 +15,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Pencil, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 
-const emptyForm = { name: "", role: "", date_of_birth: "" };
+const emptyForm = { name: "", role: "", date_of_birth: "", address: "", phone: "" };
 
 export default function StaffPage() {
   const { staff, addStaff, updateStaff, deleteStaff } = useData();
@@ -34,7 +34,7 @@ export default function StaffPage() {
   const openAdd = () => { setEditing(null); setForm(emptyForm); setPhotoFile(null); setPhotoPreview(null); setDialogOpen(true); };
   const openEdit = (s: StaffMember) => {
     setEditing(s);
-    setForm({ name: s.name, role: s.role, date_of_birth: s.date_of_birth || "" });
+    setForm({ name: s.name, role: s.role, date_of_birth: s.date_of_birth || "", address: s.address || "", phone: s.phone || "" });
     setPhotoFile(null);
     setPhotoPreview(s.photo_url || null);
     setDialogOpen(true);
@@ -64,12 +64,12 @@ export default function StaffPage() {
     try {
       if (editing) {
         const photo_url = await uploadPhoto(editing.staff_id);
-        await updateStaff(editing.id, { name: form.name, role: form.role, date_of_birth: form.date_of_birth || null, photo_url });
+        await updateStaff(editing.id, { name: form.name, role: form.role, date_of_birth: form.date_of_birth || null, photo_url, address: form.address || null, phone: form.phone || null });
         toast.success("Staff updated");
       } else {
         const tempId = `STF${Date.now()}`;
         const photo_url = await uploadPhoto(tempId);
-        await addStaff({ name: form.name, role: form.role, date_of_birth: form.date_of_birth || undefined, photo_url: photo_url || undefined });
+        await addStaff({ name: form.name, role: form.role, date_of_birth: form.date_of_birth || undefined, photo_url: photo_url || undefined, address: form.address || undefined, phone: form.phone || undefined });
         toast.success("Staff added");
       }
       setDialogOpen(false);
@@ -93,6 +93,8 @@ export default function StaffPage() {
               <TableHead>ID</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Role</TableHead>
+              <TableHead>Phone</TableHead>
+              <TableHead>Address</TableHead>
               <TableHead>Date of Birth</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -109,6 +111,8 @@ export default function StaffPage() {
                 <TableCell className="font-mono text-xs">{s.staff_id}</TableCell>
                 <TableCell className="font-medium">{s.name}</TableCell>
                 <TableCell><Badge variant="outline">{s.role}</Badge></TableCell>
+                <TableCell>{s.phone || "—"}</TableCell>
+                <TableCell className="max-w-[200px] truncate">{s.address || "—"}</TableCell>
                 <TableCell>{s.date_of_birth || "—"}</TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="icon" onClick={() => openEdit(s)}><Pencil className="w-4 h-4" /></Button>
@@ -136,6 +140,8 @@ export default function StaffPage() {
             <div className="grid gap-2"><Label>Name</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></div>
             <div className="grid gap-2"><Label>Role</Label><Input value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} /></div>
             <div className="grid gap-2"><Label>Date of Birth</Label><Input type="date" value={form.date_of_birth} onChange={e => setForm({ ...form, date_of_birth: e.target.value })} /></div>
+            <div className="grid gap-2"><Label>Phone Number</Label><Input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="e.g. 024 123 4567" /></div>
+            <div className="grid gap-2"><Label>Address</Label><Input value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} placeholder="e.g. Accra, Ghana" /></div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
